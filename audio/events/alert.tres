@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="AudioEvent" load_steps=6 format=3 uid="uid://bcqjpr0rqkt7n"]
+
+[ext_resource type="Script" uid="uid://b4a388ulfjwgu" path="res://addons/moonAudio/data/audio_positional_preset_3d.gd" id="1_2lgia"]
+[ext_resource type="Script" uid="uid://bf3jruswk3732" path="res://addons/moonAudio/data/audio_event.gd" id="1_tnspu"]
+[ext_resource type="Script" uid="uid://b1iek58cg3ku0" path="res://addons/moonAudio/data/audio_event_stream.gd" id="2_2lgia"]
+
+[sub_resource type="Resource" id="Resource_2lgia"]
+script = ExtResource("1_2lgia")
+attenuation_model = 0
+unit_size = 10.0
+max_distance = 2000.0
+panning_strength = 1.0
+area_mask = 1
+doppler = 0
+emission_angle_enabled = false
+emission_angle_degrees = 45.0
+emission_angle_filter_attenuation_db = -12.0
+attenuation_filter_enabled = false
+attenuation_filter_cutoff_hz = 5000
+attenuation_filter_db = -24.0
+metadata/_custom_type_script = "uid://b4a388ulfjwgu"
+
+[sub_resource type="Resource" id="Resource_ivoyn"]
+script = ExtResource("2_2lgia")
+volume_db = 0.0
+pitch_scale = 1.0
+delay = 0.0
+attack_duration = 0.0
+release_duration = 0.0
+metadata/_custom_type_script = "uid://b1iek58cg3ku0"
+
+[resource]
+script = ExtResource("1_tnspu")
+streams = Array[ExtResource("2_2lgia")]([SubResource("Resource_ivoyn")])
+audio_bus = "Master"
+positional = 2
+persistent = true
+max_polyphony = 0.0
+volume_db = 0.0
+pitch_scale = 1.0
+positional_tracking = true
+positional_preset = SubResource("Resource_2lgia")
+metadata/_custom_type_script = "uid://bf3jruswk3732"
