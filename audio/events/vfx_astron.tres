@@ -31,9 +31,9 @@ script = ExtResource("2_aq35j")
 stream = SubResource("AudioStreamRandomizer_mgsgk")
 volume_db = 0.0
 pitch_scale = 1.0
-delay = 500.0
+delay = 0.0
 attack_duration = 0.0
-release_duration = 0.0
+release_duration = 381.0
 metadata/_custom_type_script = "uid://b1iek58cg3ku0"
 
 [sub_resource type="Resource" id="Resource_bvuyb"]
@@ -41,9 +41,9 @@ script = ExtResource("2_aq35j")
 stream = SubResource("AudioStreamRandomizer_mgsgk")
 volume_db = 0.0
 pitch_scale = 1.0
-delay = 800.0
-attack_duration = 0.0
-release_duration = 0.0
+delay = 300.0
+attack_duration = 1500.0
+release_duration = 2000.0
 metadata/_custom_type_script = "uid://b1iek58cg3ku0"
 
 [sub_resource type="Resource" id="Resource_akkhb"]
@@ -51,9 +51,9 @@ script = ExtResource("2_aq35j")
 stream = SubResource("AudioStreamRandomizer_mgsgk")
 volume_db = 0.0
 pitch_scale = 1.0
-delay = 1100.0
-attack_duration = 0.0
-release_duration = 0.0
+delay = 600.0
+attack_duration = 1500.0
+release_duration = 2000.0
 metadata/_custom_type_script = "uid://b1iek58cg3ku0"
 
 [resource]

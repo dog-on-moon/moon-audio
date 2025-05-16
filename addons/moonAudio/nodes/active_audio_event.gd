@@ -153,7 +153,6 @@ func _hot_update():
 	_update_volume()
 	_update_pitch_scale()
 	
-	set_physics_process(positional_parent != null and event.positional_tracking and event.positional != AudioEvent.Positional.Off)
 	for stream in audio_players:
 		var ap := audio_players[stream]
 		ap.bus = event.audio_bus
@@ -162,32 +161,34 @@ func _hot_update():
 func _update_ap_positionality(ap: Node):
 	match event.positional:
 		AudioEvent.Positional._2D:
-			var preset: AudioPositionalPreset2D = event.positional_preset
-			if preset:
-				ap.attenuation = preset.attenuation
-				ap.max_distance = preset.max_distance
-				ap.panning_strength = preset.panning_strength
-				ap.area_mask = preset.area_mask
-			if positional_parent:
-				var pp: Node2D = positional_parent
-				ap.global_transform = pp.global_transform
+			if positional_parent and is_instance_of(positional_parent, Node2D):
+				var preset: AudioPositionalPreset2D = event.positional_preset
+				if preset:
+					ap.attenuation = preset.attenuation
+					ap.max_distance = preset.max_distance
+					ap.panning_strength = preset.panning_strength
+					ap.area_mask = preset.area_mask
+				if positional_parent:
+					var pp: Node2D = positional_parent
+					ap.global_transform = pp.global_transform
 		AudioEvent.Positional._3D:
-			var preset: AudioPositionalPreset3D = event.positional_preset
-			if preset:
-				ap.attenuation_model = preset.attenuation_model
-				ap.unit_size = preset.unit_size
-				ap.max_distance = preset.max_distance
-				ap.panning_strength = preset.panning_strength
-				ap.area_mask = preset.area_mask
-				ap.doppler_tracking = preset.doppler
-				ap.emission_angle_enabled = preset.emission_angle_enabled
-				ap.emission_angle_degrees = preset.emission_angle_degrees
-				ap.emission_angle_filter_attenuation_db = preset.emission_angle_filter_attenuation_db
-				ap.attenuation_filter_cutoff_hz = preset.attenuation_filter_cutoff_hz if preset.attenuation_filter_enabled else 20500
-				ap.attenuation_filter_db = preset.attenuation_filter_db
-			if positional_parent:
-				var pp: Node3D = positional_parent
-				ap.global_transform = pp.global_transform
+			if positional_parent and is_instance_of(positional_parent, Node3D):
+				var preset: AudioPositionalPreset3D = event.positional_preset
+				if preset:
+					ap.attenuation_model = preset.attenuation_model
+					ap.unit_size = preset.unit_size
+					ap.max_distance = preset.max_distance
+					ap.panning_strength = preset.panning_strength
+					ap.area_mask = preset.area_mask
+					ap.doppler_tracking = preset.doppler
+					ap.emission_angle_enabled = preset.emission_angle_enabled
+					ap.emission_angle_degrees = preset.emission_angle_degrees
+					ap.emission_angle_filter_attenuation_db = preset.emission_angle_filter_attenuation_db
+					ap.attenuation_filter_cutoff_hz = preset.attenuation_filter_cutoff_hz if preset.attenuation_filter_enabled else 20500
+					ap.attenuation_filter_db = preset.attenuation_filter_db
+				if positional_parent:
+					var pp: Node3D = positional_parent
+					ap.global_transform = pp.global_transform
 
 func _physics_process(delta: float) -> void:
 	if not positional_parent or not is_instance_valid(positional_parent):

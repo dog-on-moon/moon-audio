@@ -17,6 +17,50 @@ enum Positional {
 ## Models all audio events played on the audio event.
 @export var streams: Array[AudioEventStream] = []
 
+#region Testing
+
+static var editor_positional_root: Node = null
+
+static var editor_active_events: Array[ActiveAudioEvent] = []
+
+@warning_ignore_start("unused_private_class_variable")
+@export_tool_button("Play", "Play") var _1 = _test_play
+@export_tool_button("Release", "MoveUp") var _2 = _test_release
+@export_tool_button("Stop", "Stop") var _3 = _test_stop
+@warning_ignore_restore("unused_private_class_variable")
+
+func _test_play():
+	if not editor_positional_root:
+		editor_positional_root = Node.new()
+		Engine.get_singleton(&"EditorInterface").get_base_control().add_child(editor_positional_root)
+	
+	var p := positional
+	var db := volume_db
+	positional = Positional.Off
+	volume_db -= 10.0
+	
+	var e := play(editor_positional_root)
+	editor_active_events.append(e)
+	e.finished.connect(_test_handle_finished.bind(e))
+	
+	set_block_signals(true)
+	volume_db = db
+	positional = p
+	set_block_signals(false)
+
+func _test_release():
+	for aae in editor_active_events.duplicate():
+		aae.release()
+
+func _test_stop():
+	for aae in editor_active_events.duplicate():
+		aae.stop()
+
+func _test_handle_finished(aae: ActiveAudioEvent):
+	editor_active_events.erase(aae)
+
+#endregion
+
 @export_group("Settings")
 
 ## The audio bus this event is played on.
@@ -31,7 +75,6 @@ enum Positional {
 	set(x):
 		positional = x
 		notify_property_list_changed()
-		emit_changed()
 
 ## Persistent events will continue playback even if their parent cleans up.
 ## This is done by reparenting the node to the viewport.
