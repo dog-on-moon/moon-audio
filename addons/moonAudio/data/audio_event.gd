@@ -4,8 +4,6 @@ extends Resource
 class_name AudioEvent
 ## Models the playback of dynamic audio, with various parameter modulation options.
 
-const ActiveAudioEvent = preload("uid://dnl3yg010hsyy")
-
 #region Exports
 
 enum Positional {
