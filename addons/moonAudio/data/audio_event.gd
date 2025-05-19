@@ -93,7 +93,7 @@ func _test_handle_finished(aae: ActiveAudioEvent):
 @export_group("Mixing")
 
 ## Volume adjustment for the audio event.
-@export_range(-12.0, 12.0, 0.01, "or_less", "or_greater", "suffix:dB") var volume_db := 0.0:
+@export_range(-24.0, 24.0, 0.01, "or_less", "or_greater", "suffix:dB") var volume_db := 0.0:
 	set(x):
 		volume_db = clampf(x, -80.0, 48.0)
 		emit_changed()
@@ -167,3 +167,13 @@ func _validate_property(property: Dictionary) -> void:
 		Positional._3D:
 			if property.name == &"positional_preset":
 				property.hint_string = "AudioPositionalPreset3D"
+
+static var _lateloads: Dictionary[String, AudioEvent] = {}
+
+static func lateload(path: String) -> AudioEvent:
+	if path not in _lateloads:
+		_lateloads[path] = load(path)
+	return _lateloads[path]
+
+static func lateplay(path: String, parent: Node, positional_parent: Node = null) -> ActiveAudioEvent:
+	return lateload(path).play(parent, positional_parent)

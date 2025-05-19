@@ -1,6 +1,7 @@
 @tool
 @icon("res://addons/moonAudio/icons/active_audio_event.png")
 extends Node
+class_name ActiveAudioEvent
 ## The live instantiation of an AudioEvent.
 
 ## Emitted once this event is finished (or was stopped or cleaned up early).
@@ -14,6 +15,13 @@ var volume_db := 0.0:
 		volume_db = x
 		if is_node_ready():
 			_update_volume()
+
+## Float API for event volume control.
+var volume_float: float:
+	set(x):
+		volume_db = linear_to_db(x)
+	get:
+		return db_to_linear(volume_db)
 
 ## Master pitch scale control on this audio event.
 var pitch_scale := 1.0:
@@ -47,6 +55,8 @@ func _ready() -> void:
 	set_physics_process(positional_parent != null and event.positional_tracking and event.positional != AudioEvent.Positional.Off)
 	process_physics_priority = 1000
 	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_ON
+	if event.persistent:
+		get_parent().tree_exiting.connect(_parent_leaving)
 	
 	# Create all event streams.
 	for stream in event.streams:
@@ -63,8 +73,9 @@ func _ready() -> void:
 				ap.top_level = true
 		
 		# Setup the base properties.
+		var target_volume_linear: float = db_to_linear(event.volume_db + stream.volume_db + volume_db)
 		ap.stream = stream.stream
-		ap.volume_db = event.volume_db + stream.volume_db + volume_db
+		ap.volume_db = -80.0
 		ap.pitch_scale = event.pitch_scale * stream.pitch_scale * pitch_scale
 		ap.bus = event.audio_bus
 		audio_players[stream] = ap
@@ -73,20 +84,21 @@ func _ready() -> void:
 		
 		# Setup the playback.
 		if not stream.delay:
-			ap.play()
+			ap.play.call_deferred(stream.start_time)
 			
 			if stream.attack_duration:
 				var t := create_tween()
-				t.tween_property(ap, ^"volume_linear", ap.volume_linear, float(stream.attack_duration) * 0.001).from(0.0)
-				ap.volume_linear = 0.0
+				t.tween_property(ap, ^"volume_linear", target_volume_linear, float(stream.attack_duration) * 0.001).from(0.0)
 				attack_tweens.append(t)
+			else:
+				ap.volume_linear = target_volume_linear
 		else:
 			var t := create_tween()
 			t.tween_interval(float(stream.delay) * 0.001)
-			t.tween_callback(ap.play)
+			t.tween_callback(ap.play.bind(stream.start_time))
 			
 			if stream.attack_duration:
-				t.tween_property(ap, ^"volume_linear", ap.volume_linear, float(stream.attack_duration) * 0.001).from(0.0)
+				t.tween_property(ap, ^"volume_linear", target_volume_linear, float(stream.attack_duration) * 0.001).from(0.0)
 				ap.volume_linear = 0.0
 			attack_tweens.append(t)
 		
@@ -110,20 +122,26 @@ func release():
 	# End active players.
 	for stream in audio_players:
 		var ap := audio_players[stream]
-		if ap in _awaiting_streams.keys():
-			if ap.playing:
-				if not stream.release_duration:
-					# Playing, stop it immediately and release it.
-					ap.stop()
-					_stream_finished(ap)
+		if is_instance_valid(ap):
+			if ap in _awaiting_streams.keys():
+				if ap.playing:
+					if not stream.release_duration:
+						# Playing, stop it immediately and release it.
+						ap.stop()
+						_stream_finished(ap)
+					else:
+						# Playing, has fade out, so do that.
+						var t := create_tween()
+						t.tween_property(ap, ^"volume_linear", 0.0, float(stream.release_duration) * 0.001)
+						t.tween_callback(_stream_finished.bind(ap))
 				else:
-					# Playing, has fade out, so do that.
-					var t := create_tween()
-					t.tween_property(ap, ^"volume_linear", 0.0, float(stream.release_duration) * 0.001)
-					t.tween_callback(_stream_finished.bind(ap))
-			else:
-				# Not playing, just release it.
-				_stream_finished(ap)
+					# Not playing, just release it.
+					_stream_finished(ap)
+		else:
+			# ahhh shit
+			queue_free()
+			_emit_finished()
+			return
 
 ## Force stops the event immediately.
 func stop():
@@ -132,7 +150,9 @@ func stop():
 
 var _awaiting_streams: Dictionary[Node, Object] = {}
 
-func _stream_finished(ap: Node):
+func _stream_finished(ap):  # remain typeless in case AP is cleaned up prior to calling
+	if not ap or not is_instance_valid(ap):
+		return
 	if ap in _awaiting_streams:
 		_awaiting_streams.erase(ap)
 		if not _awaiting_streams:
@@ -142,12 +162,14 @@ func _stream_finished(ap: Node):
 func _update_volume():
 	for stream in audio_players:
 		var ap := audio_players[stream]
-		ap.volume_db = event.volume_db + stream.volume_db + volume_db
+		if is_instance_valid(ap):
+			ap.volume_db = event.volume_db + stream.volume_db + volume_db
 
 func _update_pitch_scale():
 	for stream in audio_players:
 		var ap := audio_players[stream]
-		ap.pitch_scale = event.pitch_scale * stream.pitch_scale * pitch_scale
+		if is_instance_valid(ap):
+			ap.pitch_scale = maxf(event.pitch_scale * stream.pitch_scale * pitch_scale, 0.001)
 
 func _hot_update():
 	_update_volume()
@@ -155,8 +177,9 @@ func _hot_update():
 	
 	for stream in audio_players:
 		var ap := audio_players[stream]
-		ap.bus = event.audio_bus
-		_update_ap_positionality(ap)
+		if is_instance_valid(ap):
+			ap.bus = event.audio_bus
+			_update_ap_positionality(ap)
 
 func _update_ap_positionality(ap: Node):
 	match event.positional:
@@ -177,6 +200,7 @@ func _update_ap_positionality(ap: Node):
 				if preset:
 					ap.attenuation_model = preset.attenuation_model
 					ap.unit_size = preset.unit_size
+					ap.max_db = preset.max_db
 					ap.max_distance = preset.max_distance
 					ap.panning_strength = preset.panning_strength
 					ap.area_mask = preset.area_mask
@@ -204,16 +228,9 @@ func _physics_process(delta: float) -> void:
 			for ap: AudioStreamPlayer3D in _awaiting_streams:
 				ap.global_transform = pp.global_transform
 
-func _notification(what: int) -> void:
-	if not Engine.is_editor_hint():
-		if what == NOTIFICATION_EXIT_TREE and _awaiting_streams and event.persistent:
-			is_queued_for_deletion()
-			reparent(get_viewport())
-		if what == NOTIFICATION_PREDELETE:
-			if _awaiting_streams and event.persistent:
-				cancel_free()
-			else:
-				_emit_finished()
+func _parent_leaving():
+	if _awaiting_streams:
+		reparent(Engine.get_main_loop().root)
 
 func _emit_finished():
 	if not _has_finished:

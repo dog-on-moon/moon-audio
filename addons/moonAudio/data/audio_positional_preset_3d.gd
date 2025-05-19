@@ -14,6 +14,11 @@ class_name AudioPositionalPreset3D
 		unit_size = x
 		emit_changed()
 
+@export_range(-24.0, 6.0, 0.001, "suffix:dB") var max_db := 3.0:
+	set(x):
+		max_db = x
+		emit_changed()
+
 ## Maximum distance from which audio is still hearable.
 @export_range(0, 4096, 0.01, "suffix:m") var max_distance := 0.0:
 	set(x):
