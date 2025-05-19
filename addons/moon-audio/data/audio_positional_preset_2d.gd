@@ -1,5 +1,5 @@
 @tool
-@icon("res://addons/moonAudio/icons/audio_positional_preset_2d.png")
+@icon("res://addons/moon-audio/icons/audio_positional_preset_2d.png")
 extends Resource
 class_name AudioPositionalPreset2D
 

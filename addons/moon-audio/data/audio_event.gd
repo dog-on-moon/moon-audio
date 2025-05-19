@@ -1,5 +1,5 @@
 @tool
-@icon("res://addons/moonAudio/icons/audio_event.png")
+@icon("res://addons/moon-audio/icons/audio_event.png")
 extends Resource
 class_name AudioEvent
 ## Models the playback of dynamic audio, with various parameter modulation options.

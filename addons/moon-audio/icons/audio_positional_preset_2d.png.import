@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://83ubxhl30in2"
-path="res://.godot/imported/audio_event_player.png-8b5c15443872455867605ff754800bcd.ctex"
+uid="uid://5xxx3nwkj87h"
+path="res://.godot/imported/audio_positional_preset_2d.png-9517c5118c58d8e266b7af702077bdc5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/moonAudio/icons/audio_event_player.png"
-dest_files=["res://.godot/imported/audio_event_player.png-8b5c15443872455867605ff754800bcd.ctex"]
+source_file="res://addons/moon-audio/icons/audio_positional_preset_2d.png"
+dest_files=["res://.godot/imported/audio_positional_preset_2d.png-9517c5118c58d8e266b7af702077bdc5.ctex"]
 
 [params]
 

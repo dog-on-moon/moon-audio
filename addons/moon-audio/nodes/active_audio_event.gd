@@ -1,5 +1,5 @@
 @tool
-@icon("res://addons/moonAudio/icons/active_audio_event.png")
+@icon("res://addons/moon-audio/icons/active_audio_event.png")
 extends Node
 class_name ActiveAudioEvent
 ## The live instantiation of an AudioEvent.

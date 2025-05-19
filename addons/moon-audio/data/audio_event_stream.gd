@@ -1,5 +1,5 @@
 @tool
-@icon("res://addons/moonAudio/icons/audio_event_stream.png")
+@icon("res://addons/moon-audio/icons/audio_event_stream.png")
 extends Resource
 class_name AudioEventStream
 ## Models an individual audio stream playing within an audio event.

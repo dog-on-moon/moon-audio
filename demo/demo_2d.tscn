@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bi5en06thkj1c"]
 
 [ext_resource type="Texture2D" uid="uid://d0nbeci4r0u1w" path="res://icon.svg" id="1_3tfqo"]
-[ext_resource type="Script" uid="uid://cbgsm2utlt2nu" path="res://addons/moonAudio/nodes/audio_event_player.gd" id="1_d0fqr"]
+[ext_resource type="Script" uid="uid://cbgsm2utlt2nu" path="res://addons/moon-audio/nodes/audio_event_player.gd" id="1_d0fqr"]
 [ext_resource type="Resource" uid="uid://b5s58vd5hs5yl" path="res://audio/events/vfx_astron.tres" id="2_if31x"]
 
 [node name="Node2D" type="Node2D"]
@@ -16,3 +16,8 @@ event = ExtResource("2_if31x")
 metadata/_custom_type_script = "uid://cbgsm2utlt2nu"
 
 [node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "this demo lowkey unfinished. Sorry"

@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="AudioEvent" load_steps=14 format=3 uid="uid://b5s58vd5hs5yl"]
 
-[ext_resource type="Script" uid="uid://bljwywpavtbf5" path="res://addons/moonAudio/data/audio_positional_preset_2d.gd" id="1_bvuyb"]
-[ext_resource type="Script" uid="uid://bf3jruswk3732" path="res://addons/moonAudio/data/audio_event.gd" id="1_cblus"]
-[ext_resource type="Script" uid="uid://b1iek58cg3ku0" path="res://addons/moonAudio/data/audio_event_stream.gd" id="2_aq35j"]
+[ext_resource type="Script" uid="uid://bljwywpavtbf5" path="res://addons/moon-audio/data/audio_positional_preset_2d.gd" id="1_bvuyb"]
+[ext_resource type="Script" uid="uid://bf3jruswk3732" path="res://addons/moon-audio/data/audio_event.gd" id="1_cblus"]
+[ext_resource type="Script" uid="uid://b1iek58cg3ku0" path="res://addons/moon-audio/data/audio_event_stream.gd" id="2_aq35j"]
 [ext_resource type="AudioStream" uid="uid://bpusyskyw46w6" path="res://audio/streams/vfx_astron_Seq01.wav" id="4_0sv4u"]
 [ext_resource type="AudioStream" uid="uid://conqvba2jyxup" path="res://audio/streams/vfx_astron_Seq02.wav" id="5_akkhb"]
 [ext_resource type="AudioStream" uid="uid://covn71keffnfq" path="res://audio/streams/vfx_astron_Seq03.wav" id="6_t4c2b"]
@@ -31,6 +31,7 @@ script = ExtResource("2_aq35j")
 stream = SubResource("AudioStreamRandomizer_mgsgk")
 volume_db = 0.0
 pitch_scale = 1.0
+start_time = 0.0
 delay = 0.0
 attack_duration = 0.0
 release_duration = 381.0
@@ -41,6 +42,7 @@ script = ExtResource("2_aq35j")
 stream = SubResource("AudioStreamRandomizer_mgsgk")
 volume_db = 0.0
 pitch_scale = 1.0
+start_time = 0.0
 delay = 300.0
 attack_duration = 1500.0
 release_duration = 2000.0
@@ -51,6 +53,7 @@ script = ExtResource("2_aq35j")
 stream = SubResource("AudioStreamRandomizer_mgsgk")
 volume_db = 0.0
 pitch_scale = 1.0
+start_time = 0.0
 delay = 600.0
 attack_duration = 1500.0
 release_duration = 2000.0

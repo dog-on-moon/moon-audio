@@ -1,5 +1,5 @@
 @tool
-@icon("res://addons/moonAudio/icons/audio_event_player.png")
+@icon("res://addons/moon-audio/icons/audio_event_player.png")
 extends Node
 class_name AudioEventPlayer
 ## Provides an interface for playing an AudioEvent.
@@ -56,8 +56,6 @@ var fx_charge: float:
 ## All active events currently playing within this AudioEventPlayer.
 var active_events: Array[ActiveAudioEvent] = []
 
-@onready var mp := Godaemon.mp(self, false)
-
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
@@ -92,9 +90,10 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_PARENTED:
 		positional_parent = get_parent()
 
-## Creates a fx_charge lerp interval off of this event player.
-func lerp_charge_interval(duration: float, from: float = 0.0, to: float = 1.0, _ease := Tween.EASE_IN_OUT, trans := Tween.TRANS_LINEAR) -> LerpFunc:
-	return LerpFunc.new(_set_charge, duration, from, to, _ease, trans)
+# Creates a fx_charge lerp interval off of this event player.
+# This is integration with moon-interval.
+#func lerp_charge_interval(duration: float, from: float = 0.0, to: float = 1.0, _ease := Tween.EASE_IN_OUT, trans := Tween.TRANS_LINEAR) -> LerpFunc:
+	#return LerpFunc.new(_set_charge, duration, from, to, _ease, trans)
 
 func _set_charge(x: float):
 	fx_charge = x
