@@ -14,12 +14,12 @@ config/name="moon-audio"
 config/description="A developer-first audio plugin for Godot, decoupling audio design from implementation via resources. "
 config/version="1.0.0"
 run/main_scene="uid://bi5en06thkj1c"
-config/features=PackedStringArray("4.4", "Forward Plus")
+config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="uid://15pyttb0ckwl"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/moonAudio/plugin.cfg")
+enabled=PackedStringArray("res://addons/moon-audio/plugin.cfg")
 
 [file_customization]
 

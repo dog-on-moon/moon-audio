@@ -84,3 +84,20 @@ class_name AudioPositionalPreset3D
 	set(x):
 		attenuation_filter_db = x
 		emit_changed()
+
+static func create_from_stream_player(audio_stream_player_3d: AudioStreamPlayer3D) -> AudioPositionalPreset3D:
+	var app := AudioPositionalPreset3D.new()
+	app.attenuation_model = audio_stream_player_3d.attenuation_model
+	app.unit_size = audio_stream_player_3d.unit_size
+	app.max_db = audio_stream_player_3d.max_db
+	app.max_distance = audio_stream_player_3d.max_distance
+	app.panning_strength = audio_stream_player_3d.panning_strength
+	app.area_mask = audio_stream_player_3d.area_mask
+	app.doppler = audio_stream_player_3d.doppler_tracking
+	app.emission_angle_enabled = audio_stream_player_3d.emission_angle_enabled
+	app.emission_angle_degrees = audio_stream_player_3d.emission_angle_degrees
+	app.emission_angle_filter_attenuation_db = audio_stream_player_3d.emission_angle_filter_attenuation_db
+	app.attenuation_filter_enabled = audio_stream_player_3d.attenuation_filter_cutoff_hz < 20500
+	app.attenuation_filter_cutoff_hz = audio_stream_player_3d.attenuation_filter_cutoff_hz if audio_stream_player_3d.attenuation_filter_cutoff_hz != 20500 else 5000
+	app.attenuation_filter_db = audio_stream_player_3d.attenuation_filter_db
+	return app

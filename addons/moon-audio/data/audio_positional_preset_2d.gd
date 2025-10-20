@@ -26,3 +26,11 @@ class_name AudioPositionalPreset2D
 	set(x):
 		area_mask = x
 		emit_changed()
+
+static func create_from_stream_player(audio_stream_player_2d: AudioStreamPlayer2D) -> AudioPositionalPreset2D:
+	var app := AudioPositionalPreset2D.new()
+	app.attenuation = audio_stream_player_2d.attenuation
+	app.max_distance = audio_stream_player_2d.max_distance
+	app.panning_strength = audio_stream_player_2d.panning_strength
+	app.area_mask = audio_stream_player_2d.area_mask
+	return app
